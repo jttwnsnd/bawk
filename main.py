@@ -58,18 +58,13 @@ def login():
 
 @app.route('/login_submit', methods=['POST'])
 def login_submit():
-	password = request.form['password'].encode('utf-8')
-	check_username_query = "SELECT password FROM users where username = '%s'" % request.form['username']
-	cursor.execute(check_username_query)
+	password = request.form['password']
+	check_password_query = "SELECT password FROM users where username = '%s'" % request.form['username']
+	cursor.execute(check_password_query)
 	hashed_password_from_mysql = cursor.fetchone()
-	print hashed_password_from_mysql[0]
-	print hashed_password_from_mysql
-	print bcrypt.hashpw(password, hashed_password_from_mysql[0])
-	return 'testing'
 	# to check a hash against english:
-	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql) == hashed_password_from_mysql:
+	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
-		print 'yay'
 		return 'I got it'
 	else:
 		return "it didnt work"
