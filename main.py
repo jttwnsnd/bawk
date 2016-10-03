@@ -1,6 +1,7 @@
 # Import flask stuff
 from flask import Flask, render_template, redirect, request
 from flaskext.mysql import MySQL
+import bcrypt
 
 #create an instance of the mysql class
 mysql = MySQL()
@@ -34,9 +35,6 @@ def register():
 def register_submit():
 	# first, check to see if the username already exists. SELECT statement.
 	check_username_query = "SELECT * FROM users where username = '%s'" % request.form['username']
-	
-	#print check_username_query
-	print check_username_query
 	cursor.execute(check_username_query)
 	check_username_result = cursor.fetchone()
 	# second, if it't not taken, then insert the username into mysql
@@ -47,23 +45,34 @@ def register_submit():
 		password = request.form['password'].encode('utf-8')
 		hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
 		email = request.form['email']
-		avatar = request.form['avatar']
-		username_insert_query = "INSERT INTO users VALUES (DEFAULT, real_name, username, hashed_password, email, avatar)"
-		cursor.execute(username_insert_query)
-		conn.comit()
+		username_insert_query = "INSERT INTO users VALUES (DEFAULT, %s, %s, %s, %s, NULL)"
+		cursor.execute(username_insert_query, (real_name, username, hashed_password, email))
+		conn.commit()
+		return redirect('/')
 	else:
 		# second b, if it is taken, send them back to the register page with a message
 		return redirect('/register?username=taken')
 @app.route('/login')
 def login():
-	print 'login'
+	return render_template('login.html')
 
 @app.route('/login_submit', methods=['POST'])
 def login_submit():
+	password = request.form['password'].encode('utf-8')
+	check_username_query = "SELECT password FROM users where username = '%s'" % request.form['username']
+	cursor.execute(check_username_query)
+	hashed_password_from_mysql = cursor.fetchone()
+	print hashed_password_from_mysql[0]
+	print hashed_password_from_mysql
+	print bcrypt.hashpw(password, hashed_password_from_mysql[0])
+	return 'testing'
 	# to check a hash against english:
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql) == hashed_password_from_mysql:
 		#we have a match
 		print 'yay'
+		return 'I got it'
+	else:
+		return "it didnt work"
 
 if __name__ == "__main__":
 	app.run(debug=True)
