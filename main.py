@@ -36,7 +36,7 @@ def register():
 @app.route('/register_submit', methods=['POST'])
 def register_submit():
 	# first, check to see if the username already exists. SELECT statement.
-	check_username_query = "SELECT * FROM users where username = '%s'" % request.form['username']
+	check_username_query = "SELECT * FROM user where username = '%s'" % request.form['username']
 	cursor.execute(check_username_query)
 	check_username_result = cursor.fetchone()
 	# second, if it't not taken, then insert the username into mysql
@@ -48,7 +48,7 @@ def register_submit():
 		password = request.form['password'].encode('utf-8')
 		hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
 		email = request.form['email']
-		username_insert_query = "INSERT INTO users VALUES (DEFAULT, %s, %s, %s, %s, NULL)"
+		username_insert_query = "INSERT INTO user VALUES (DEFAULT, %s, %s, %s, %s, NULL)"
 		cursor.execute(username_insert_query, (real_name, username, hashed_password, email))
 		conn.commit()
 		return redirect('/'+username)
@@ -64,7 +64,7 @@ def login_submit():
 	password = request.form['password']
 	username = request.form['username']
 	session['username'] = request.form['username']
-	check_password_query = "SELECT password FROM users where username = '%s'" % request.form['username']
+	check_password_query = "SELECT password FROM user where username = '%s'" % request.form['username']
 	cursor.execute(check_password_query)
 	hashed_password_from_mysql = cursor.fetchone()
 	# to check a hash against english:
