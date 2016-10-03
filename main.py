@@ -1,5 +1,5 @@
 # Import flask stuff
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 from flaskext.mysql import MySQL
 import bcrypt
 
@@ -40,6 +40,7 @@ def register_submit():
 	# second, if it't not taken, then insert the username into mysql
 	if (check_username_result is None):
 		# no match. insert
+		session['username'] = request.form['username']
 		real_name = request.form['real_name']
 		username = request.form['username']
 		password = request.form['password'].encode('utf-8')
@@ -59,15 +60,21 @@ def login():
 @app.route('/login_submit', methods=['POST'])
 def login_submit():
 	password = request.form['password']
+	session['username'] = request.form['username']
 	check_password_query = "SELECT password FROM users where username = '%s'" % request.form['username']
 	cursor.execute(check_password_query)
 	hashed_password_from_mysql = cursor.fetchone()
 	# to check a hash against english:
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
-		return 'I got it'
+		return redirect('/')
 	else:
-		return "it didnt work"
+		return redirect('/login?message=incorrect_password')
+
+@app.route('/logout')
+def logout():
+	session.clear()
+	return redirect('/?message=logged_out')
 
 if __name__ == "__main__":
 	app.run(debug=True)
