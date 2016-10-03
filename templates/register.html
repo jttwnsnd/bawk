@@ -1,6 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+{% if message %}
+	<div class="alert alert-danger">{{message}}</div>
+{% endif %}
 
 	<div class="col-xs-20 col-xs-offset-1">
 		<form class="form-horizontal" method="post" action="/register_submit">

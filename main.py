@@ -20,7 +20,11 @@ cursor = conn.cursor()
 # Create route for home page
 @app.route('/')
 def index():
-	return render_template('index.html')
+	if request.args.get('username'):
+		#the username variable is set in the query string
+		return render_template('register.html', message="That username is already taken")
+	else:
+		return render_template('index.html')
 
 @app.route('/register')
 def register():
@@ -35,10 +39,31 @@ def register_submit():
 	print check_username_query
 	cursor.execute(check_username_query)
 	check_username_result = cursor.fetchone()
+	# second, if it't not taken, then insert the username into mysql
+	if (check_username_result is None):
+		# no match. insert
+		real_name = request.form['real_name']
+		username = request.form['username']
+		password = request.form['password'].encode('utf-8')
+		hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+		email = request.form['email']
+		avatar = request.form['avatar']
+		username_insert_query = "INSERT INTO users VALUES (DEFAULT, real_name, username, hashed_password, email, avatar)"
+		cursor.execute(username_insert_query)
+		conn.comit()
+	else:
+		# second b, if it is taken, send them back to the register page with a message
+		return redirect('/register?username=taken')
+@app.route('/login')
+def login():
+	print 'login'
 
-	# second, if it is taken, send them back to the register page with a message
-	# second b, if it't not taken, then insert the username into mysql
-	return 'done'
+@app.route('/login_submit', methods=['POST'])
+def login_submit():
+	# to check a hash against english:
+	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql) == hashed_password_from_mysql:
+		#we have a match
+		print 'yay'
 
 if __name__ == "__main__":
 	app.run(debug=True)
