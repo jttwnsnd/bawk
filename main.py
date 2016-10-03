@@ -51,7 +51,7 @@ def register_submit():
 		username_insert_query = "INSERT INTO users VALUES (DEFAULT, %s, %s, %s, %s, NULL)"
 		cursor.execute(username_insert_query, (real_name, username, hashed_password, email))
 		conn.commit()
-		return redirect('/')
+		return redirect('/'+username)
 	else:
 		# second b, if it is taken, send them back to the register page with a message
 		return redirect('/register?username=taken')
@@ -62,6 +62,7 @@ def login():
 @app.route('/login_submit', methods=['POST'])
 def login_submit():
 	password = request.form['password']
+	username = request.form['username']
 	session['username'] = request.form['username']
 	check_password_query = "SELECT password FROM users where username = '%s'" % request.form['username']
 	cursor.execute(check_password_query)
@@ -69,7 +70,7 @@ def login_submit():
 	# to check a hash against english:
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
-		return redirect('/')
+		return redirect('/'+username)
 	else:
 		return redirect('/login?message=incorrect_password')
 
@@ -77,6 +78,11 @@ def login_submit():
 def logout():
 	session.clear()
 	return redirect('/?message=logged_out')
+
+@app.route('/<username>')
+def user_page(username):
+	
+	return render_template('user_landing.html')
 
 if __name__ == "__main__":
 	app.run(debug=True)
