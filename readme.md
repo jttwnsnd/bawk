@@ -19,3 +19,5 @@ This is a simple Yik Yak/Twitter type clone. The app allows the user to register
 ```pip install flask flask-mysql bcrypt```
 
 ##URL to Live Demo
+
+This was mine and PirieD704's first version. For more effort in us working together on github in a collborative environment, we joined our repo and that can be seen here: www.github.com/PirieD704/bawk2
