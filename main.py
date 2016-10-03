@@ -17,6 +17,8 @@ mysql.init_app(app)
 conn = mysql.connect()
 #set up a cursor object, which is what the sql uses to connect and run queries
 cursor = conn.cursor()
+#session secret key
+app.secret_key = 'asdf&&^(*ahasfljhas'
 
 # Create route for home page
 @app.route('/')

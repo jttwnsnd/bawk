@@ -2,3 +2,9 @@
 body {
   background-color: #1d96d7;
 }
+
+/* line 25, ../../compass/sass/styles.sass */
+.user-greet {
+  display: inline-block;
+  padding: 15px;
+}
