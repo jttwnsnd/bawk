@@ -70,7 +70,7 @@ def login_submit():
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
 		session['username'] = request.form['username']
-		session['id'] = check_password_query[1]
+		session['id'] = check_password-query[1]
 		return render_template('index.html')
 	else:
 		return redirect('/login?message=incorrect_password')
@@ -102,13 +102,6 @@ def post_submit():
 @app.route('/home')
 def home():
 	return 'home.html'
-
-# @app.route('/process_vote', methods="POST")
-# def process_vote():
-# 	# check to see, has the uservoted on this particular item
-# 	pid = request.form['vid'] # the post they voted on. this came from jquery $.ajax
-# 	ceck_user_votes_query = "SELECT * FROM votes INNER JOIN user user.id = votes.uid WHERE user.username = '%s' AND votes.pid = '%s'" % session['username'], pid
-# 	cursor.execute(ceck_user_votes_query);
 
 if __name__ == "__main__":
 	app.run(debug=True)
