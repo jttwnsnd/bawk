@@ -103,12 +103,12 @@ def post_submit():
 def home():
 	return 'home.html'
 
-@app.route('/process_vote', methods="POST")
-def process_vote():
-	# check to see, has the uservoted on this particular item
-	pid = request.form['vid'] # the post they voted on. this came from jquery $.ajax
-	ceck_user_votes_query = "SELECT * FROM votes INNER JOIN user user.id = votes.uid WHERE user.username = '%s' AND votes.pid = '%s'" % session['username'], pid
-	return jsonife(request.form['vid'])
+# @app.route('/process_vote', methods="POST")
+# def process_vote():
+# 	# check to see, has the uservoted on this particular item
+# 	pid = request.form['vid'] # the post they voted on. this came from jquery $.ajax
+# 	ceck_user_votes_query = "SELECT * FROM votes INNER JOIN user user.id = votes.uid WHERE user.username = '%s' AND votes.pid = '%s'" % session['username'], pid
+# 	cursor.execute(ceck_user_votes_query);
 
 if __name__ == "__main__":
 	app.run(debug=True)
