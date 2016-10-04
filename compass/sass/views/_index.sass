@@ -1,20 +1,57 @@
+.container
+	.top-wrapper
+		.username
+			font-size: 28px
+			color: #eee
+	.span-holder
+		position: relative
+		font-size: 24px
+		margin-bottom: 20px
+		.glyph-flat
+			position: absolute
+		.glyph-rotate
+			position: absolute
+			transform: rotateZ(90deg)
+			left: 17px
+			transition: all 0.2s ease-in
+		.glyph-trans
+			position: absolute
+			left: 15px
+			transform: rotateZ(0deg)
+	.the-post-form
+		visibility: hidden
+		height: 0px
+		transition: all .2s ease-in
+	.active
 
-
-.bawk-feed
-	margin: auto
-	margin-top: 50px
-	background-color: blue
-	.bawk-wrapper
-		background-color: #fff
-		padding: 0px
-		padding: 0px
-	.bawk-user-avatar
-		width: 100px
-		img
+	form
+		textarea
+			border-radius: 5px
+			border-color: #35b5f4
 			width: 100%
-	.right-side-bawk
-		padding: 0px
-		.bawk-user
+			padding: 7px
+	.bawk-feed
+		margin: auto
+		margin-top: 50px
+		background-color: blue
+		border-radius: 5px
+		.bawk-wrapper
+			background-color: #fff
 			padding: 0px
-		.the-bawk
+			margin-top: 10px
+			border-radius: 5px
+		.bawk-user-avatar
+			width: 100px
+			img
+				width: 100%
+				border-radius: 5px
+		.right-side-bawk
 			padding: 0px
+			.bawk-user
+				padding: 0px
+			.the-bawk
+				padding: 0px
+		.bawk-vote
+			padding: 10px 0px
+			p
+				margin: 10px 0px
