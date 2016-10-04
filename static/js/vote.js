@@ -4,7 +4,7 @@ $(document).ready(function(){
 		$('.the-post-form').toggleClass('active');
 		if($('.the-post-form').css('visibility') == 'hidden'){
 			setTimeout(function(){
-				$('.the-post-form').css({'visibility': 'visible', 'height': 'auto'})
+				$('.the-post-form').css({'visibility': 'visible', 'height': '120px'})
 			},10);	
 		}else{
 			setTimeout(function(){

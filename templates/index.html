@@ -15,15 +15,21 @@
 			
 		</div>
 	</div>
-	<div class="col-sm-6 col-sm-offset-3 text-center">		
-		<form id="submit-post-form" action="post_submit" method="post">
-			<div>What can you say that will help save the Manatees?</div>
-			<textarea class="hidden-xs hidden-sm" name="post_content" cols="60" rows="3"></textarea>
-			<textarea class="hidden-md hidden-lg" name="post_content" cols="40" rows="3"></textarea>
-			<div class="col-sm-12">
-				<button type="submit" class="btn btn-primary">Submit Post</button>
-			</div>
-		</form>
+	<div class="col-sm-1 col-sm-offset-9 span-holder">
+		<span class="glyphicon glyphicon-minus glyph-flat"></span>
+		<span class="glyphicon glyphicon-minus glyph-rotate"></span>
+	</div>
+	<div class="the-post-form col-sm-8 col-sm-offset-2 active">
+		<div class="col-sm-6 col-sm-offset-3 text-center">		
+			<form id="submit-post-form" action="post_submit" method="post">
+				<div>POST</div>
+				<textarea class="hidden-xs hidden-sm" name="post_content" cols="60" rows="3"></textarea>
+				<textarea class="hidden-md hidden-lg" name="post_content" cols="40" rows="3"></textarea>
+				<div class="col-sm-12">
+					<button type="submit" class="btn btn-primary">Submit Post</button>
+				</div>
+			</form>
+		</div>
 	</div>
 	<div class="col-xs-12 bawk-feed">
 	{% for bawk in bawks %}
@@ -50,7 +56,7 @@
 				<span class="vote downvote glyphicon glyphicon-menu-down" post_id="{{bawk[0]}}"></span>
 			</div>
 		</div>
-	{% endfor %}
+		{% endfor %}
+		</div>
 	</div>
-</div>
 {% endblock %}
