@@ -63,13 +63,14 @@ def login():
 def login_submit():
 	password = request.form['password']
 	username = request.form['username']
-	session['username'] = request.form['username']
-	check_password_query = "SELECT password FROM user where username = '%s'" % request.form['username']
+	check_password_query = "SELECT password, id FROM user where username = '%s'" % request.form['username']
 	cursor.execute(check_password_query)
 	hashed_password_from_mysql = cursor.fetchone()
 	# to check a hash against english:
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
+		session['username'] = request.form['username']
+		session['id'] = check_username_result[1]
 		return redirect('/'+username)
 	else:
 		return redirect('/login?message=incorrect_password')
@@ -81,8 +82,22 @@ def logout():
 
 @app.route('/<username>')
 def user_page(username):
-	
 	return render_template('user_landing.html')
+
+@app.route('/post_submit', methods=["POST"])
+def post_submit():
+	# get the id of the user to keep track of who posted what
+	print session['username']
+	get_user_id = "SELECT id FROM user WHERE username = '%s'" % session['username']
+	cursor.execute(get_user_id)
+	get_user_id_result = cursor.fetchone()
+	user_id = get_user_id_result[0]
+	# insert post into the MySQL
+	post_content = request.form['post_content']
+	post_content_query = "INSERT INTO bawks (post_content, uid, current_vote) VALUES ('"+post_content+"', "+str(user_id)+", 0)"
+	cursor.execute(post_content_query)
+	conn.commit()
+	return request.form['post_content']
 
 if __name__ == "__main__":
 	app.run(debug=True)
