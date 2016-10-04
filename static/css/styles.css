@@ -1,3 +1,36 @@
+/* line 3, ../../compass/sass/views/_index.sass */
+.bawk-feed {
+  margin: auto;
+  margin-top: 50px;
+  background-color: blue;
+}
+/* line 7, ../../compass/sass/views/_index.sass */
+.bawk-feed .bawk-wrapper {
+  background-color: #fff;
+  padding: 0px;
+  padding: 0px;
+}
+/* line 11, ../../compass/sass/views/_index.sass */
+.bawk-feed .bawk-user-avatar {
+  width: 100px;
+}
+/* line 13, ../../compass/sass/views/_index.sass */
+.bawk-feed .bawk-user-avatar img {
+  width: 100%;
+}
+/* line 15, ../../compass/sass/views/_index.sass */
+.bawk-feed .right-side-bawk {
+  padding: 0px;
+}
+/* line 17, ../../compass/sass/views/_index.sass */
+.bawk-feed .right-side-bawk .bawk-user {
+  padding: 0px;
+}
+/* line 19, ../../compass/sass/views/_index.sass */
+.bawk-feed .right-side-bawk .the-bawk {
+  padding: 0px;
+}
+
 /* line 23, ../../compass/sass/styles.sass */
 body {
   background-color: #1d96d7;
