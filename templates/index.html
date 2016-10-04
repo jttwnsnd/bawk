@@ -4,5 +4,14 @@
 
 {% block body %}
 <div class="well well-lg">This is the main page {{session['username']}}</div>
+<div class="col-sm-8 col-sm-offset-2">
+	<form id="submit-post-form" action="post_submit" method="post">
+		<label class="col-sm-12">What can you say that will help save the manatees?</label>
+		<textarea name="post_content" id="" cols="80" rows="10"></textarea>
+		<div class="col-sm-12">
+			<button type="submit" class="btn btn-primary">Submit Post</button>
+		</div>
+	</form>
+</div>
 
 {% endblock %}

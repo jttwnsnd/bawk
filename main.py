@@ -51,7 +51,7 @@ def register_submit():
 		username_insert_query = "INSERT INTO user VALUES (DEFAULT, %s, %s, %s, %s, NULL)"
 		cursor.execute(username_insert_query, (real_name, username, hashed_password, email))
 		conn.commit()
-		return redirect('/'+username)
+		return render_template('index.html')
 	else:
 		# second b, if it is taken, send them back to the register page with a message
 		return redirect('/register?username=taken')
@@ -63,14 +63,15 @@ def login():
 def login_submit():
 	password = request.form['password']
 	username = request.form['username']
-	session['username'] = request.form['username']
-	check_password_query = "SELECT password FROM user where username = '%s'" % request.form['username']
+	check_password_query = "SELECT password, id FROM user where username = '%s'" % request.form['username']
 	cursor.execute(check_password_query)
 	hashed_password_from_mysql = cursor.fetchone()
 	# to check a hash against english:
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
-		return redirect('/'+username)
+		session['username'] = request.form['username']
+		session['id'] = check_password-query[1]
+		return render_template('index.html')
 	else:
 		return redirect('/login?message=incorrect_password')
 
@@ -83,6 +84,25 @@ def logout():
 def user_page(username):
 	
 	return render_template('user_landing.html')
+
+@app.route('/post_submit', methods=["POST"])
+def post_submit():
+	# pull the post from the form
+	post_content = request.form['post_content']
+	# get the id of the user to keep track of who posted what
+	get_user_id = "SELECT id FROM user WHERE username = '%s'" % session['username']
+	cursor.execute(get_user_id)
+	get_user_id_result = cursor.fetchone()
+	user_id = get_user_id_result[0]
+	# insert post into the MySQL
+	post_content_query = "INSERT INTO bawks (post_content, uid, current_vote) VALUES ('"+post_content+"', "+str(user_id)+", 0)"
+	cursor.execute(post_content_query)
+	conn.commit()
+	return request.form['post_content']
+
+@app.route('/home')
+def home():
+	return 'home'
 
 if __name__ == "__main__":
 	app.run(debug=True)
