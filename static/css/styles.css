@@ -1,3 +1,31 @@
+/* line 1, ../../compass/sass/views/_index.sass */
+.posts {
+  width: 60%;
+  margin: auto;
+}
+/* line 4, ../../compass/sass/views/_index.sass */
+.posts .post {
+  margin: 10px;
+  padding: 10px;
+  background-color: #fff;
+}
+/* line 8, ../../compass/sass/views/_index.sass */
+.posts .post .content {
+  float: left;
+  display: inline-block;
+}
+/* line 11, ../../compass/sass/views/_index.sass */
+.posts .post .votes {
+  float: left;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: right;
+}
+/* line 16, ../../compass/sass/views/_index.sass */
+.posts .post .votes p {
+  margin: 10px 0px;
+}
+
 /* line 23, ../../compass/sass/styles.sass */
 body {
   background-color: #1d96d7;
