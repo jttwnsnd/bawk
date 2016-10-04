@@ -1,6 +1,10 @@
 #Bawk (Social Post) App
 
 ##Overview of the Project
+Collaborators:
+PirieD704 - http://www.github.com/PirieD704
+jttwnsnd
+
 This is a simple Yik Yak/Twitter type clone. The app allows the user to register/login, it hashes the password using bcrypt, and displays the "bawks" of the user's followers. THe user can follow other users, and view the profile.
 
 ##TEchnologies in use
@@ -20,4 +24,5 @@ This is a simple Yik Yak/Twitter type clone. The app allows the user to register
 
 ##URL to Live Demo
 
-This was mine and PirieD704's first version. For more effort in us working together on github in a collborative environment, we joined our repo and that can be seen here: www.github.com/PirieD704/bawk2nd
+##Challenges & Solutions
+We found that approaching this as a mobile first, back-end app meant our approach needed to consist of view-checking, and design choices that are optimal for both views. In the case with our ```textarea``` where the user can insert their post, an original view consisted of being too wide. We utilized Bootstraps ```hidden-*``` classes to allow certain sizes of these views to appear at certain sizes.

@@ -1,34 +1,86 @@
 /* line 3, ../../compass/sass/views/_index.sass */
-.bawk-feed {
+.container .top-wrapper .username {
+  font-size: 28px;
+  color: #eee;
+}
+/* line 6, ../../compass/sass/views/_index.sass */
+.container .span-holder {
+  position: relative;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+/* line 10, ../../compass/sass/views/_index.sass */
+.container .span-holder .glyph-flat {
+  position: absolute;
+}
+/* line 12, ../../compass/sass/views/_index.sass */
+.container .span-holder .glyph-rotate {
+  position: absolute;
+  transform: rotateZ(90deg);
+  left: 17px;
+  transition: all 0.2s ease-in;
+}
+/* line 17, ../../compass/sass/views/_index.sass */
+.container .span-holder .glyph-trans {
+  position: absolute;
+  left: 15px;
+  transform: rotateZ(0deg);
+}
+/* line 21, ../../compass/sass/views/_index.sass */
+.container .the-post-form {
+  visibility: hidden;
+  height: 0px;
+  transition: all 0.2s ease-in;
+}
+/* line 28, ../../compass/sass/views/_index.sass */
+.container form textarea {
+  border-radius: 5px;
+  border-color: #35b5f4;
+  width: 100%;
+  padding: 7px;
+}
+/* line 33, ../../compass/sass/views/_index.sass */
+.container .bawk-feed {
   margin: auto;
   margin-top: 50px;
   background-color: blue;
+  border-radius: 5px;
 }
-/* line 7, ../../compass/sass/views/_index.sass */
-.bawk-feed .bawk-wrapper {
+/* line 38, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-wrapper {
   background-color: #fff;
   padding: 0px;
-  padding: 0px;
+  margin-top: 10px;
+  border-radius: 5px;
 }
-/* line 11, ../../compass/sass/views/_index.sass */
-.bawk-feed .bawk-user-avatar {
+/* line 43, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-user-avatar {
   width: 100px;
 }
-/* line 13, ../../compass/sass/views/_index.sass */
-.bawk-feed .bawk-user-avatar img {
+/* line 45, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-user-avatar img {
   width: 100%;
+  border-radius: 5px;
 }
-/* line 15, ../../compass/sass/views/_index.sass */
-.bawk-feed .right-side-bawk {
+/* line 48, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .right-side-bawk {
   padding: 0px;
 }
-/* line 17, ../../compass/sass/views/_index.sass */
-.bawk-feed .right-side-bawk .bawk-user {
+/* line 50, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .right-side-bawk .bawk-user {
   padding: 0px;
 }
-/* line 19, ../../compass/sass/views/_index.sass */
-.bawk-feed .right-side-bawk .the-bawk {
+/* line 52, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .right-side-bawk .the-bawk {
   padding: 0px;
+}
+/* line 54, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-vote {
+  padding: 10px 0px;
+}
+/* line 56, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-vote p {
+  margin: 10px 0px;
 }
 
 /* line 23, ../../compass/sass/styles.sass */
