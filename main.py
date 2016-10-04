@@ -1,5 +1,5 @@
 # Import flask stuff
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, jsonify
 from flaskext.mysql import MySQL
 import bcrypt
 
@@ -23,6 +23,13 @@ app.secret_key = 'asdf&&^(*ahasfljhas'
 # Create route for home page
 @app.route('/')
 def index():
+	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id WHERE 1"
+	cursor.execute(get_bawks_query)
+	get_bawks_result = cursor.fetchall()
+	if get_bawks_result is not None:
+		return render_template('index.html', bawks = get_bawks_result)
+	else:
+		return render_template('index.html', message = "No bawks yet!")
 	if request.args.get('username'):
 		#the username variable is set in the query string
 		return render_template('register.html', message="That username is already taken")
@@ -70,8 +77,8 @@ def login_submit():
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
 		session['username'] = request.form['username']
-		session['id'] = check_password-query[1]
-		return render_template('index.html')
+		session['id'] = check_password_query[1]
+		return redirect('/')
 	else:
 		return redirect('/login?message=incorrect_password')
 
@@ -102,6 +109,22 @@ def post_submit():
 @app.route('/home')
 def home():
 	return 'home.html'
+@app.route('/process_vote', methods=['POST'])
+def process_vote():
+	pid = request.form['vid'] # this came from jquery $.ajax
+	voteType = request.form['voteType']
+	username = session['username']
+	check_user_votes = "SELECT * FROM votes INNER JOIN user ON user.id = votes.id WHERE user.username = '%s' AND votes.pid = '%s'" % (username, pid)
+	cursor.execute(check_user_votes)
+	votes = cursor.fetchone()
+	# it's possible we get none back because the user hasn't voted on this post
+	if votes is None:
+		#user hasn't voted, insert
+		insert_user_vote_query = "INSERT INTO votes (pid, uid, vote_type) VALUES ('%s', '%s', '%s')" % (pid, session['id'], voteType)
+		cursor.execute(insert_user_vote_query)
+		conn.commit()
+	return jsonify(request.form['vid'])
+	# return 'good'
 
 if __name__ == "__main__":
 	app.run(debug=True)

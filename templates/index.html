@@ -15,24 +15,42 @@
 			
 		</div>
 	</div>
-	<div class="col-sm-6 col-sm-offset-3">		
+	<div class="col-sm-6 col-sm-offset-3 text-center">		
 		<form id="submit-post-form" action="post_submit" method="post">
 			<div>What can you say that will help save the Manatees?</div>
-			<textarea name="post_content" cols="80" rows="10"></textarea>
+			<textarea class="hidden-xs hidden-sm" name="post_content" cols="60" rows="3"></textarea>
+			<textarea class="hidden-md hidden-lg" name="post_content" cols="40" rows="3"></textarea>
 			<div class="col-sm-12">
 				<button type="submit" class="btn btn-primary">Submit Post</button>
 			</div>
 		</form>
 	</div>
-	<div class="col-sm-12 bawk-feed">
-		<div class="col-sm-8 col-sm-offset-2 bawk-wrapper">
-			<div class="col-sm-2 bawk-user-avatar"><img src="../static/images/dave.jpg"></div>
-			<div class="col-sm-8 right-side-bawk">
-				<div class="col-sm-12 bawk-user">David</div>
-				<div class="col-sm-12 the-bawk">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus iste doloremque quis tenetur quaerat assumenda, iusto, quia doloribus qui soluta deleniti id odio delectus eligendi distinctio similique accusamus repellat perferendis.</div>
+	<div class="col-xs-12 bawk-feed">
+	{% for bawk in bawks %}
+		<div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1 bawk-wrapper">
+			<div class="col-sm-2 col-xs-12 bawk-user-avatar">
+				<img src="../static/images/dave.jpg">
 			</div>
-			<div class="bawk-vote"></div>
+			<div class="col-xs-6 hidden-sm hidden-md hidden-lg bawk-user">{{bawk[3]}}</div>
+			<div class="col-sm-8 col-xs-12 right-side-bawk">
+				<div class="col-sm-12 hidden-xs bawk-user">
+					<h4>{{bawk[3]}}</h4>
+				</div>
+				<div class="col-sm-12 the-bawk">{{bawk[1]}}</div>
+			</div>
+			<!---->
+			<div class="bawk-vote col-sm-2 hidden-xs text-center">
+				<span class="vote upvote glyphicon glyphicon-menu-up" post_id="{{bawk[0]}}"></span>
+				<p>{{bawk[2]}}</p>
+				<span class="vote downvote glyphicon glyphicon-menu-down" post_id="{{bawk[0][0]}}"></span>
+			</div>
+			<div class="bawk-vote col-xs-12 hidden-sm hidden-md hidden-lg text-center">
+				<span class="vote upvote glyphicon glyphicon-menu-up" post_id="{{bawk[0]}}"></span>
+				<spap>{{bawk[2]}}</span>
+				<span class="vote downvote glyphicon glyphicon-menu-down" post_id="{{bawk[0]}}"></span>
+			</div>
 		</div>
+	{% endfor %}
 	</div>
 </div>
 {% endblock %}

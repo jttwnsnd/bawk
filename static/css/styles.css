@@ -1,34 +1,55 @@
 /* line 3, ../../compass/sass/views/_index.sass */
-.bawk-feed {
+.container .username {
+  font-size: 28px;
+  color: #eee;
+}
+/* line 7, ../../compass/sass/views/_index.sass */
+.container form textarea {
+  border-radius: 5px;
+  border-color: #35b5f4;
+}
+/* line 10, ../../compass/sass/views/_index.sass */
+.container .bawk-feed {
   margin: auto;
   margin-top: 50px;
   background-color: blue;
-}
-/* line 7, ../../compass/sass/views/_index.sass */
-.bawk-feed .bawk-wrapper {
-  background-color: #fff;
-  padding: 0px;
-  padding: 0px;
-}
-/* line 11, ../../compass/sass/views/_index.sass */
-.bawk-feed .bawk-user-avatar {
-  width: 100px;
-}
-/* line 13, ../../compass/sass/views/_index.sass */
-.bawk-feed .bawk-user-avatar img {
-  width: 100%;
+  border-radius: 5px;
 }
 /* line 15, ../../compass/sass/views/_index.sass */
-.bawk-feed .right-side-bawk {
+.container .bawk-feed .bawk-wrapper {
+  background-color: #fff;
+  padding: 0px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+/* line 20, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-user-avatar {
+  width: 100px;
+}
+/* line 22, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-user-avatar img {
+  width: 100%;
+  border-radius: 5px;
+}
+/* line 25, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .right-side-bawk {
   padding: 0px;
 }
-/* line 17, ../../compass/sass/views/_index.sass */
-.bawk-feed .right-side-bawk .bawk-user {
+/* line 27, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .right-side-bawk .bawk-user {
   padding: 0px;
 }
-/* line 19, ../../compass/sass/views/_index.sass */
-.bawk-feed .right-side-bawk .the-bawk {
+/* line 29, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .right-side-bawk .the-bawk {
   padding: 0px;
+}
+/* line 31, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-vote {
+  padding: 10px 0px;
+}
+/* line 33, ../../compass/sass/views/_index.sass */
+.container .bawk-feed .bawk-vote p {
+  margin: 10px 0px;
 }
 
 /* line 23, ../../compass/sass/styles.sass */
