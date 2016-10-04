@@ -82,7 +82,6 @@ def logout():
 
 @app.route('/<username>')
 def user_page(username):
-	
 	return render_template('user_landing.html')
 
 @app.route('/post_submit', methods=["POST"])

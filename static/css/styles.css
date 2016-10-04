@@ -1,29 +1,34 @@
-/* line 1, ../../compass/sass/views/_index.sass */
-.posts {
-  width: 60%;
+/* line 3, ../../compass/sass/views/_index.sass */
+.bawk-feed {
   margin: auto;
+  margin-top: 50px;
+  background-color: blue;
 }
-/* line 4, ../../compass/sass/views/_index.sass */
-.posts .post {
-  margin: 10px;
-  padding: 10px;
+/* line 7, ../../compass/sass/views/_index.sass */
+.bawk-feed .bawk-wrapper {
   background-color: #fff;
-}
-/* line 8, ../../compass/sass/views/_index.sass */
-.posts .post .content {
-  float: left;
-  display: inline-block;
+  padding: 0px;
+  padding: 0px;
 }
 /* line 11, ../../compass/sass/views/_index.sass */
-.posts .post .votes {
-  float: left;
-  display: inline-block;
-  vertical-align: middle;
-  text-align: right;
+.bawk-feed .bawk-user-avatar {
+  width: 100px;
 }
-/* line 16, ../../compass/sass/views/_index.sass */
-.posts .post .votes p {
-  margin: 10px 0px;
+/* line 13, ../../compass/sass/views/_index.sass */
+.bawk-feed .bawk-user-avatar img {
+  width: 100%;
+}
+/* line 15, ../../compass/sass/views/_index.sass */
+.bawk-feed .right-side-bawk {
+  padding: 0px;
+}
+/* line 17, ../../compass/sass/views/_index.sass */
+.bawk-feed .right-side-bawk .bawk-user {
+  padding: 0px;
+}
+/* line 19, ../../compass/sass/views/_index.sass */
+.bawk-feed .right-side-bawk .the-bawk {
+  padding: 0px;
 }
 
 /* line 23, ../../compass/sass/styles.sass */

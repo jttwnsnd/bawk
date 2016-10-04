@@ -3,14 +3,36 @@
 
 
 {% block body %}
-<div class="well well-lg">This is the main page {{session['username']}}</div>
-<div class="col-sm-8 col-sm-offset-2">
-	<form id="submit-post-form" action="post_submit" method="post">
-		<label class="col-sm-12">What can you say that will help save the manatees?</label>
-		<textarea name="post_content" id="" cols="80" rows="10"></textarea>
-		<div class="col-sm-12">
-			<button type="submit" class="btn btn-primary">Submit Post</button>
+<div class="container">
+	<div class="top-wrapper">
+		<div class="username">
+			{{session['username']}}
 		</div>
-	</form>
+		<div class="friends-button">
+			
+		</div>
+		<div class="following">
+			
+		</div>
+	</div>
+	<div class="col-sm-6 col-sm-offset-3">		
+		<form id="submit-post-form" action="post_submit" method="post">
+			<div>What can you say that will help save the Manatees?</div>
+			<textarea name="post_content" cols="80" rows="10"></textarea>
+			<div class="col-sm-12">
+				<button type="submit" class="btn btn-primary">Submit Post</button>
+			</div>
+		</form>
+	</div>
+	<div class="col-sm-12 bawk-feed">
+		<div class="col-sm-8 col-sm-offset-2 bawk-wrapper">
+			<div class="col-sm-2 bawk-user-avatar"><img src="../static/images/dave.jpg"></div>
+			<div class="col-sm-8 right-side-bawk">
+				<div class="col-sm-12 bawk-user">David</div>
+				<div class="col-sm-12 the-bawk">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus iste doloremque quis tenetur quaerat assumenda, iusto, quia doloribus qui soluta deleniti id odio delectus eligendi distinctio similique accusamus repellat perferendis.</div>
+			</div>
+			<div class="bawk-vote"></div>
+		</div>
+	</div>
 </div>
 {% endblock %}
