@@ -1,3 +1,5 @@
+#run virtualenv on bin in b2 then go down into bawk and run python main.py
+
 # Import flask stuff
 from flask import Flask, render_template, redirect, request, session, jsonify
 from flaskext.mysql import MySQL
