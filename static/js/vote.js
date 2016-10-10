@@ -2,14 +2,14 @@ $(document).ready(function(){
 	$('.span-holder').click(function(){
 		$('.glyph-rotate').toggleClass('glyph-trans');
 		$('.the-post-form').toggleClass('active');
-		if($('.the-post-form').css('visibility') == 'hidden'){
+		if($('.the-post-form').hasClass('active')){
 			setTimeout(function(){
-				$('.the-post-form').css({'visibility': 'visible', 'height': '120px'})
-			},10);	
+				$('.the-post-form').css({'visibility': 'visible'})
+			},200);	
 		}else{
 			setTimeout(function(){
-			$('.the-post-form').css({'visibility': 'hidden', 'height': '0px'})
-			}, 200);
+			$('.the-post-form').css({'visibility': 'hidden'})
+			}, 10);
 		}
 	})
 
