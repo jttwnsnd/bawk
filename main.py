@@ -23,18 +23,25 @@ app.secret_key = 'asdf&&^(*ahasfljhas'
 # Create route for home page
 @app.route('/')
 def index():
-	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, sum(v.vote_type) FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id INNER JOIN votes v ON v.pid = b.id WHERE 1 GROUP BY v.pid"
-	cursor.execute(get_bawks_query)
-	get_bawks_result = cursor.fetchall()
-	if get_bawks_result is not None:
-		return render_template('index.html', bawks = get_bawks_result)
+	if session['id']:
+		get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, u.avatar FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id  WHERE 1 GROUP BY id DESC"
+		cursor.execute(get_bawks_query)
+		get_bawks_result = cursor.fetchall()
+		if get_bawks_result is not None:
+			return render_template('index.html', bawks = get_bawks_result)
+		else:
+			return render_template('index.html', message = "No bawks yet!")
+		if request.args.get('username'):
+			#the username variable is set in the query string
+			return render_template('register.html', message="That username is already taken")
+		else:
+			return render_template('index.html')
 	else:
-		return render_template('index.html', message = "No bawks yet!")
-	if request.args.get('username'):
-		#the username variable is set in the query string
-		return render_template('register.html', message="That username is already taken")
-	else:
-		return render_template('index.html')
+		get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, sum(v.vote_type) FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id INNER JOIN votes v ON v.pid = b.id WHERE 1 GROUP BY v.pid DESC"
+		cursor.execute(get_bawks_query)
+		get_bawks_result = cursor.fetchall()
+		if get_bawks_result is not None:
+			return render_template('index.html', bawks = get_bawks_result)
 
 @app.route('/register')
 def register():
@@ -58,6 +65,10 @@ def register_submit():
 		username_insert_query = "INSERT INTO user VALUES (DEFAULT, %s, %s, %s, %s, NULL)"
 		cursor.execute(username_insert_query, (real_name, username, hashed_password, email))
 		conn.commit()
+		get_id_query = "SELECT id FROM user where username = '%s'" % request.form['username']
+		cursor.execute(get_id_query)
+		get_id_result = cursor.fetchone()
+		session['id'] = get_id_result[0]
 		return render_template('index.html')
 	else:
 		# second b, if it is taken, send them back to the register page with a message
@@ -78,7 +89,7 @@ def login_submit():
 		#we have a match
 		session['username'] = request.form['username']
 		session['id'] = hashed_password_from_mysql[1]
-		return redirect('/')
+		return render_template('index.html')
 	else:
 		return redirect('/login?message=incorrect_password')
 
@@ -104,7 +115,7 @@ def post_submit():
 	post_content_query = "INSERT INTO bawks (post_content, uid, current_vote) VALUES ('"+post_content+"', "+str(user_id)+", 0)"
 	cursor.execute(post_content_query)
 	conn.commit()
-	return request.form['post_content']
+	return redirect('/')
 
 @app.route('/home')
 def home():
@@ -115,34 +126,43 @@ def process_vote():
 	vote_type = request.form['voteType']
 	print pid
 	username = session['username']
-	check_user_votes = "SELECT * FROM votes INNER JOIN user ON user.id = votes.pid WHERE user.username = '%s' AND votes.pid = '%s'" % (username, pid)
+	uid = session['id']
+	check_user_votes = "SELECT * FROM votes WHERE votes.uid = '%s' AND votes.pid = '%s'" % (uid, pid)
 	cursor.execute(check_user_votes)
 	votes = cursor.fetchone()
 	print votes
+	print check_user_votes
 	# it's possible we get none back because the user hasn't voted on this post
 	if votes is None:
-		#user hasn't voted, insert
-		insert_user_vote_query = "INSERT INTO votes (pid, uid, vote_type) VALUES (%s, %s, %s)"
-		cursor.execute(insert_user_vote_query, (pid, session['id'], vote_type))
+		# user hasn't voted, insert
+		insert_user_vote_query = "INSERT INTO votes (pid, uid, vote_type) VALUES (%s, %s, %s)" % (pid, session['id'], vote_type)
+		cursor.execute(insert_user_vote_query)
 		conn.commit()
+		print insert_user_vote_query
 		get_new_total_query = "SELECT sum(vote_type) as vote_total FROM votes WHERE pid = '%s' GROUP BY pid" % pid
 		cursor.execute(get_new_total_query)
 		get_new_total_result = cursor.fetchone()
-		print get_new_total_result
+		update_count_query = "UPDATE bawks SET current_vote = %s WHERE id = '%s'" % (get_new_total_result[0], pid)
+		cursor.execute(update_count_query)
+		conn.commit()
 		return jsonify({'message': 'voteCounted', 'vote_total': int(get_new_total_result[0])})
 	else: #have they voted and
 		checkuser_vote_direction_query = "SELECT * FROM votes INNER JOIN user ON user.id = votes.uid WHERE user.username = '%s' AND votes.pid = '%s' and votes.vote_type = '%s'" % (session['username'], pid, vote_type)
 		cursor.execute(checkuser_vote_direction_query)
 		check_user_vote_direction_result = cursor.fetchone()
 		if check_user_vote_direction_result is None:
-			update_user_vote_query = "UPDATE votes SET vote_type = %s WHERE uid = '%s' and pid = '%s'"
-			cursor.execute(update_user_vote_query, ((vote_type, session['id'], pid)))
+			update_user_vote_query = "UPDATE votes SET vote_type = %s WHERE uid = '%s' and pid = '%s'" % (vote_type, session['id'], pid)
+			cursor.execute(update_user_vote_query)
 			conn.commit()
 			get_new_total_query = "SELECT sum(vote_type) as vote_total FROM votes WHERE pid = '%s' GROUP BY pid" % pid
 			cursor.execute(get_new_total_query)
 			get_new_total_result = cursor.fetchone()
+			update_count_query = "UPDATE bawks SET current_vote = %s WHERE id = '%s'" % (get_new_total_result[0], pid)
 			print get_new_total_result
-			return jsonify({'message': 'voteChanged', 'vote_total': int(get_new_total_result)})
+			print update_count_query
+			cursor.execute(update_count_query)
+			conn.commit()
+			return jsonify({'message': 'voteChanged', 'vote_total': int(get_new_total_result[0])})
 		else:
 			print votes
 			return jsonify({'message':'alreadyVoted'})
@@ -150,22 +170,41 @@ def process_vote():
 	# 	if: #are changing it
 
 	# 	else: #are voting the same, no go.
-
+	
 	# return 'good'
 @app.route('/follow')
 def follow():
-	get_all_not_me_users_query = "SELECT * FROM user WHERE id != '%d'" % session['id']
-
+	# get_all_not_me_users_query = "SELECT * FROM user WHERE id != '%s'" % session['id']
+	get_all_not_me_users_query = "SELECT * FROM user WHERE id != '%s'" % session['id']
+	cursor.execute(get_all_not_me_users_query)
+	get_all_not_me_users_result = cursor.fetchall()
 	# who is the user following.
 	# we want the username and id
 
-	get_all_following_query = "SELECT u.username, f.uid_of_user_being_following FROM follow f Left Join user u ON u.id = f.uid_of_user_being_followed where f.uid_of_user_following = '%s'" % session['id']
+	get_all_following_query = "SELECT u.username, f.uid_of_user_being_followed FROM follow f Left Join user u ON u.id = f.uid_of_user_being_followed where f.uid_of_user_following = '%s'" % session['id']
 	cursor.execute(get_all_following_query)
 	get_all_following_result = cursor.fetchall()
-	get_all_not_following_query = "SELECT * FROM user WHERE id NOT IN (SELECT uid_of_user_being_follow FROM follow WHERE uid_of_user_following = '%s') and id != '%s'" % (session['id'], session['id'])
+	get_all_not_following_query = "SELECT * FROM user WHERE id NOT IN (SELECT uid_of_user_being_followed FROM follow WHERE uid_of_user_following = '%s') and id != '%s'" % (session['id'], session['id'])
 	cursor.execute(get_all_not_following_query)
 	get_all_not_following_result = cursor.fetchall()
-	return render_template('follow.html')
+	return render_template('follow.html', following_list = get_all_following_result, not_following_list = get_all_not_following_result)
+	# return "hi"
+
+@app.route('/follow_user')
+def follow_user():
+	user_id_to_follow = request.args.get('user_id')
+	follow_query = "INSERT INTO follow (uid_of_user_being_followed, uid_of_user_following) VALUES ('%s', '%s')" % (user_id_to_follow, session['id'])
+	cursor.execute(follow_query)
+	conn.commit()
+	return redirect('/follow')
+
+@app.route('/unfollow_user')
+def unfollow_user():
+	user_id_to_unfollow = request.args.get('user_id')
+	follow_query = "DELETE FROM follow WHERE uid_of_user_being_followed = '%s' AND uid_of_user_folliwng = '%s'" % (user_id_to_unfollow, session['id'])
+	cursor.execute(follow_query)
+	conn.commit()
+	return redirect('/follow')
 
 if __name__ == "__main__":
 	app.run(debug=True)
