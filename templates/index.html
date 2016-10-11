@@ -19,7 +19,7 @@
 		<span class="glyphicon glyphicon-minus glyph-flat"></span>
 		<span class="glyphicon glyphicon-minus glyph-rotate"></span>
 	</div>
-	<div class="the-post-form col-sm-8 col-sm-offset-2 active">
+	<div class="the-post-form col-sm-8 col-sm-offset-2">
 		<div class="col-sm-6 col-sm-offset-3 text-center">		
 			<form id="submit-post-form" action="post_submit" method="post">
 				<div>POST</div>
@@ -47,8 +47,8 @@
 			<!---->
 			<div class="bawk-vote col-sm-2 hidden-xs text-center">
 				<span class="vote upvote glyphicon glyphicon-menu-up" post_id="{{bawk[0]}}"></span>
-				<p>{{bawk[2]}}</p>
-				<span class="vote downvote glyphicon glyphicon-menu-down" post_id="{{bawk[0][0]}}"></span>
+				<p up-down-id="{{bawk[0]}}">{{bawk[4]}}</p>
+				<span class="vote downvote glyphicon glyphicon-menu-down" post_id="{{bawk[0]}}"></span>
 			</div>
 			<div class="bawk-vote col-xs-12 hidden-sm hidden-md hidden-lg text-center">
 				<span class="vote upvote glyphicon glyphicon-menu-up" post_id="{{bawk[0]}}"></span>

@@ -23,7 +23,7 @@ app.secret_key = 'asdf&&^(*ahasfljhas'
 # Create route for home page
 @app.route('/')
 def index():
-	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id WHERE 1"
+	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, sum(v.vote_type) FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id INNER JOIN votes v ON v.pid = b.id WHERE 1 GROUP BY v.pid"
 	cursor.execute(get_bawks_query)
 	get_bawks_result = cursor.fetchall()
 	if get_bawks_result is not None:
@@ -77,7 +77,7 @@ def login_submit():
 	if bcrypt.hashpw(password.encode('utf-8'), hashed_password_from_mysql[0].encode('utf-8')) == hashed_password_from_mysql[0].encode('utf-8'):
 		#we have a match
 		session['username'] = request.form['username']
-		session['id'] = check_password_query[1]
+		session['id'] = hashed_password_from_mysql[1]
 		return redirect('/')
 	else:
 		return redirect('/login?message=incorrect_password')
@@ -112,19 +112,60 @@ def home():
 @app.route('/process_vote', methods=['POST'])
 def process_vote():
 	pid = request.form['vid'] # this came from jquery $.ajax
-	voteType = request.form['voteType']
+	vote_type = request.form['voteType']
+	print pid
 	username = session['username']
-	check_user_votes = "SELECT * FROM votes INNER JOIN user ON user.id = votes.id WHERE user.username = '%s' AND votes.pid = '%s'" % (username, pid)
+	check_user_votes = "SELECT * FROM votes INNER JOIN user ON user.id = votes.pid WHERE user.username = '%s' AND votes.pid = '%s'" % (username, pid)
 	cursor.execute(check_user_votes)
 	votes = cursor.fetchone()
+	print votes
 	# it's possible we get none back because the user hasn't voted on this post
 	if votes is None:
 		#user hasn't voted, insert
-		insert_user_vote_query = "INSERT INTO votes (pid, uid, vote_type) VALUES ('%s', '%s', '%s')" % (pid, session['id'], voteType)
-		cursor.execute(insert_user_vote_query)
+		insert_user_vote_query = "INSERT INTO votes (pid, uid, vote_type) VALUES (%s, %s, %s)"
+		cursor.execute(insert_user_vote_query, (pid, session['id'], vote_type))
 		conn.commit()
-	return jsonify('voteCounted')
+		get_new_total_query = "SELECT sum(vote_type) as vote_total FROM votes WHERE pid = '%s' GROUP BY pid" % pid
+		cursor.execute(get_new_total_query)
+		get_new_total_result = cursor.fetchone()
+		print get_new_total_result
+		return jsonify({'message': 'voteCounted', 'vote_total': int(get_new_total_result[0])})
+	else: #have they voted and
+		checkuser_vote_direction_query = "SELECT * FROM votes INNER JOIN user ON user.id = votes.uid WHERE user.username = '%s' AND votes.pid = '%s' and votes.vote_type = '%s'" % (session['username'], pid, vote_type)
+		cursor.execute(checkuser_vote_direction_query)
+		check_user_vote_direction_result = cursor.fetchone()
+		if check_user_vote_direction_result is None:
+			update_user_vote_query = "UPDATE votes SET vote_type = %s WHERE uid = '%s' and pid = '%s'"
+			cursor.execute(update_user_vote_query, ((vote_type, session['id'], pid)))
+			conn.commit()
+			get_new_total_query = "SELECT sum(vote_type) as vote_total FROM votes WHERE pid = '%s' GROUP BY pid" % pid
+			cursor.execute(get_new_total_query)
+			get_new_total_result = cursor.fetchone()
+			print get_new_total_result
+			return jsonify({'message': 'voteChanged', 'vote_total': int(get_new_total_result)})
+		else:
+			print votes
+			return jsonify({'message':'alreadyVoted'})
+
+	# 	if: #are changing it
+
+	# 	else: #are voting the same, no go.
+
 	# return 'good'
+@app.route('/follow')
+def follow():
+	get_all_not_me_users_query = "SELECT * FROM user WHERE id != '%d'" % session['id']
+
+	# who is the user following.
+	# we want the username and id
+
+	get_all_following_query = "SELECT u.username, f.uid_of_user_being_following FROM follow f Left Join user u ON u.id = f.uid_of_user_being_followed where f.uid_of_user_following = '%s'" % session['id']
+	cursor.execute(get_all_following_query)
+	get_all_following_result = cursor.fetchall()
+	get_all_not_following_query = "SELECT * FROM user WHERE id NOT IN (SELECT uid_of_user_being_follow FROM follow WHERE uid_of_user_following = '%s') and id != '%s'" % (session['id'], session['id'])
+	cursor.execute(get_all_not_following_query)
+	get_all_not_following_result = cursor.fetchall()
+	return render_template('follow.html')
 
 if __name__ == "__main__":
 	app.run(debug=True)
