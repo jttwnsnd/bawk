@@ -33,7 +33,6 @@ $(document).ready(function(){
 					console.log(result.vote_total)
 				}else if(result.message == 'alreadyVoted'){
 					// #user already voted. let them know
-					console.log('huh')
 					$("p[up-down-id='" + vid + "']").html('you have already voted on this bawk!')
 				}else if(result.message == 'voteCounted'){
 					$("p[up-down-id='" + vid + "']").html(result.vote_total)

@@ -23,7 +23,7 @@ app.secret_key = 'asdf&&^(*ahasfljhas'
 # Create route for home page
 @app.route('/')
 def index():
-	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id WHERE 1"
+	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, sum(v.vote_type) FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id INNER JOIN votes v ON v.pid = b.id WHERE 1 GROUP BY v.pid"
 	cursor.execute(get_bawks_query)
 	get_bawks_result = cursor.fetchall()
 	if get_bawks_result is not None:
@@ -118,6 +118,7 @@ def process_vote():
 	check_user_votes = "SELECT * FROM votes INNER JOIN user ON user.id = votes.pid WHERE user.username = '%s' AND votes.pid = '%s'" % (username, pid)
 	cursor.execute(check_user_votes)
 	votes = cursor.fetchone()
+	print votes
 	# it's possible we get none back because the user hasn't voted on this post
 	if votes is None:
 		#user hasn't voted, insert
@@ -130,7 +131,7 @@ def process_vote():
 		print get_new_total_result
 		return jsonify({'message': 'voteCounted', 'vote_total': int(get_new_total_result[0])})
 	else: #have they voted and
-		checkuser_vote_direction_query = "SELECT * FROM votes INNER JOIN user ON user.id = votes.uid WHERE user.username = '%s' AND votes.pid = %s and votes.vote_type = %s" % (session['username'], pid, vote_type)
+		checkuser_vote_direction_query = "SELECT * FROM votes INNER JOIN user ON user.id = votes.uid WHERE user.username = '%s' AND votes.pid = '%s' and votes.vote_type = '%s'" % (session['username'], pid, vote_type)
 		cursor.execute(checkuser_vote_direction_query)
 		check_user_vote_direction_result = cursor.fetchone()
 		if check_user_vote_direction_result is None:
@@ -143,6 +144,7 @@ def process_vote():
 			print get_new_total_result
 			return jsonify({'message': 'voteChanged', 'vote_total': int(get_new_total_result)})
 		else:
+			print votes
 			return jsonify({'message':'alreadyVoted'})
 
 	# 	if: #are changing it
