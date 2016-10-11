@@ -36,7 +36,7 @@
 	{% for bawk in bawks %}
 		<div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1 bawk-wrapper">
 			<div class="col-sm-2 col-xs-12 bawk-user-avatar">
-				<img src="../static/images/dave.jpg">
+				<img src="{{bawk[4]}}">
 			</div>
 			<div class="col-xs-6 hidden-sm hidden-md hidden-lg bawk-user">{{bawk[3]}}</div>
 			<div class="col-sm-8 col-xs-12 right-side-bawk">
@@ -48,7 +48,7 @@
 			<!---->
 			<div class="bawk-vote col-sm-2 hidden-xs text-center">
 				<span class="vote upvote glyphicon glyphicon-menu-up" post_id="{{bawk[0]}}"></span>
-				<p up-down-id="{{bawk[0]}}">{{bawk[4]}}</p>
+				<p up-down-id="{{bawk[0]}}">{{bawk[2]}}</p>
 				<span class="vote downvote glyphicon glyphicon-menu-down" post_id="{{bawk[0]}}"></span>
 			</div>
 			<div class="bawk-vote col-xs-12 hidden-sm hidden-md hidden-lg text-center">

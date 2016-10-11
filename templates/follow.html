@@ -1,11 +1,26 @@
 {% extends 'layout.html' %}
-
-
-
 {% block body %}
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-xs-12">I am the follow page</div>
-	</div>
+
+<img src="https://images6.alphacoders.com/368/368375.jpg" height="300px" width="100%">
+<div class="well well-lg">This is the follow page</div>
+<div class="col-sm-8 col-offset-sm-2">	
+	<table>
+	{% for follow in following_list: %}
+		<tr>
+			<td>{{follow[1]}}</td>
+			<td><button class="btn btn-danger">UnFollow</button></td>
+		</tr>
+	{% endfor %}
+	</table>
+
+	<table>
+	{% for follow in not_following_list: %}
+		<tr>
+			<td>{{follow[1]}}</td>
+			<td><button class="btn btn-primary">Follow</button></td>
+		</tr>
+	{% endfor %}
+	</table>
 </div>
+
 {% endblock %}

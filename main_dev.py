@@ -104,7 +104,7 @@ def post_submit():
 	post_content_query = "INSERT INTO bawks (post_content, uid, current_vote) VALUES ('"+post_content+"', "+str(user_id)+", 0)"
 	cursor.execute(post_content_query)
 	conn.commit()
-	return request.form['post_content']
+	return redirect('/')
 
 @app.route('/home')
 def home():

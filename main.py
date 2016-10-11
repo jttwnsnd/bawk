@@ -25,7 +25,7 @@ app.secret_key = 'asdf&&^(*ahasfljhas'
 # Create route for home page
 @app.route('/')
 def index():
-	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, sum(v.vote_type) FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id INNER JOIN votes v ON v.pid = b.id WHERE 1 GROUP BY v.pid"
+	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, u.avatar FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id  WHERE 1 GROUP BY id DESC"
 	cursor.execute(get_bawks_query)
 	get_bawks_result = cursor.fetchall()
 	if get_bawks_result is not None:
@@ -106,11 +106,12 @@ def post_submit():
 	post_content_query = "INSERT INTO bawks (post_content, uid, current_vote) VALUES ('"+post_content+"', "+str(user_id)+", 0)"
 	cursor.execute(post_content_query)
 	conn.commit()
-	return request.form['post_content']
+	return redirect('/')
 
 @app.route('/home')
 def home():
 	return 'home.html'
+
 @app.route('/process_vote', methods=['POST'])
 def process_vote():
 	pid = request.form['vid'] # this came from jquery $.ajax
@@ -168,6 +169,14 @@ def follow():
 	cursor.execute(get_all_not_following_query)
 	get_all_not_following_result = cursor.fetchall()
 	return render_template('follow.html')
+
+@app.route('/follow_user')
+def follow_user():
+	user_id_to_follow = request.args.get('user_id')
+	follow_query = "INSERT INTO follow(uid_of_user_being_followed, uid_of_user_following) VALUES ('%s', '%s')" % (user_id_to_follow, session('id'))
+	cursor.execute(follow_query)
+	conn.commit()
+	return redirect('/follow')
 
 if __name__ == "__main__":
 	app.run(debug=True)
