@@ -155,7 +155,17 @@ def process_vote():
 @app.route('/follow')
 def follow():
 	get_all_not_me_users_query = "SELECT * FROM user WHERE id != '%d'" % session['id']
-	get_all_following_query = "SELECT * FROM follow INNER JOIN user on '%s' = follow.uid_of_user_following" % session['id']
+
+	# who is the user following.
+	# we want the username and id
+
+	get_all_following_query = "SELECT u.username, f.uid_of_user_being_following FROM follow f Left Join user u ON u.id = f.uid_of_user_being_followed where f.uid_of_user_following = '%s'" % session['id']
+	cursor.execute(get_all_following_query)
+	get_all_following_result = cursor.fetchall()
+	get_all_not_following_query = "SELECT * FROM user WHERE id NOT IN (SELECT uid_of_user_being_follow FROM follow WHERE uid_of_user_following = '%s') and id != '%s'" % (session['id'], session['id'])
+	cursor.execute(get_all_not_following_query)
+	get_all_not_following_result = cursor.fetchall()
 	return render_template('follow.html')
+
 if __name__ == "__main__":
 	app.run(debug=True)
