@@ -23,25 +23,25 @@ app.secret_key = 'asdf&&^(*ahasfljhas'
 # Create route for home page
 @app.route('/')
 def index():
-	if session['id']:
-		get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, u.avatar FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id  WHERE 1 GROUP BY id DESC"
-		cursor.execute(get_bawks_query)
-		get_bawks_result = cursor.fetchall()
-		if get_bawks_result is not None:
-			return render_template('index.html', bawks = get_bawks_result)
-		else:
-			return render_template('index.html', message = "No bawks yet!")
-		if request.args.get('username'):
-			#the username variable is set in the query string
-			return render_template('register.html', message="That username is already taken")
-		else:
-			return render_template('index.html')
+	# if session['id']:
+	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, u.avatar FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id  WHERE 1 GROUP BY id DESC"
+	cursor.execute(get_bawks_query)
+	get_bawks_result = cursor.fetchall()
+	if get_bawks_result is not None:
+		return render_template('index.html', bawks = get_bawks_result)
 	else:
-		get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, sum(v.vote_type) FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id INNER JOIN votes v ON v.pid = b.id WHERE 1 GROUP BY v.pid DESC"
-		cursor.execute(get_bawks_query)
-		get_bawks_result = cursor.fetchall()
-		if get_bawks_result is not None:
-			return render_template('index.html', bawks = get_bawks_result)
+		return render_template('index.html', message = "No bawks yet!")
+	if request.args.get('username'):
+		#the username variable is set in the query string
+		return render_template('register.html', message="That username is already taken")
+	else:
+		return render_template('index.html')
+	# else:
+	# 	get_bawks_query = "SELECT b.id, b.post_content, b.current_vote, u.username, u.avatar FROM bawks AS b INNER JOIN user AS u ON b.uid = u.id  WHERE 1"
+	# 	cursor.execute(get_bawks_query)
+	# 	get_bawks_result = cursor.fetchall()
+	# 	if get_bawks_result is not None:
+	# 		return render_template('index.html', bawks = get_bawks_result)
 
 @app.route('/register')
 def register():
@@ -207,4 +207,4 @@ def unfollow_user():
 	return redirect('/follow')
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(host='0.0.0.0')
